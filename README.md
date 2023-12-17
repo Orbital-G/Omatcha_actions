@@ -21,7 +21,7 @@
 
 ## 環境構築
 [こちらのスライド](https://github.com/ryuichiueda/my_slides/blob/master/robotdesign3_2021/lesson1.md)を元に
-ROSのインストールとワークスペースの構築を例に行なってください。  
+ROSのインストールとワークスペースの構築を行なってください。  
 以降、ワークスペースはcatkiin_wsを例として説明します。  
 1. catkin_ws/src内にCRANE-X7のROSパッケージをインストールしてください。
 ```sh
