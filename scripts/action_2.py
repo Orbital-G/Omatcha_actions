@@ -1,40 +1,26 @@
 #!/usr/bin/env python3
 
-'''
-import argparse
-import os
-import platform
-import sys
-from pathlib import Path
-import threading
-import torch
-import pyrealsense2 as rs
-import numpy as np
-import re
-'''
+
 import rospy
 import actionlib
 import math
 import sys
-from Omatcha_actions.msg import val
+from Omatcha_actions.msg import val2
 from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
 from control_msgs.msg import GripperCommandAction, GripperCommandGoal
 from trajectory_msgs.msg import JointTrajectoryPoint
 
-area = 0
-cx=0
-cy=0
-count=0
+cx2 = 0
+count = 0
+depth = 0
 def callback(message):
-	#print("area: %f, cx: %f, cy: %f" %(message.area,message.cx,message.cy))
-	global area
-	global cx
-	global cy
-	global count
-	area = message.area
-	cx = message.cx
-	cy = message.cy
-	count = message.count
+	print("%f" %(message.depth))
+	global cx2
+	global count2
+	global depth
+	cx2 = message.cx2
+	count2 = message.count2
+	depth = message.depth
 	
 class ArmJointTrajectoryExample(object):
 
@@ -74,11 +60,9 @@ class ArmJointTrajectoryExample(object):
     
     def go(self):
         global joint_values
-        
-        global area
-        global count
-        global cx
-        global cy
+        global count2
+        global cx2
+        global depth
 	
         self.setup()
         self.gripper_goal.command.position = math.radians(80.0)
@@ -90,99 +74,54 @@ class ArmJointTrajectoryExample(object):
         print("serch stanby")
         self.setup()
         self.gripper_goal.command.position = math.radians(80.0)
-        joint_values =[math.radians(-90), math.radians(-20), 0.0,math.radians(-150), 0.0, math.radians(100), math.radians(-90)] 
+        joint_values =[math.radians(-90), math.radians(-20), 0.0,math.radians(-150), 0.0, math.radians(100), math.radians(90)] 
         self.setup2(2.5,100.0,2.5)
         
-       
-        
-        gradu1=[-90,-80,-70,-60,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90]
-        count=0
-        for i in range(0,181,2):
+        count2=0
+        for i in range(0,45,2):
         	
         	self.setup()
         	#self.gripper_goal.command.position = math.radians(90.0)
-        	joint_values =[math.radians(i-90), math.radians(-20), 0.0,math.radians(-150), 0.0, math.radians(100), math.radians(-90)]
+        	joint_values =[math.radians(i-90), math.radians(-20), 0.0,math.radians(-150), 0.0, math.radians(100), math.radians(90)]
         	self.setup2(0.2,100.0,0.1)
         	
-        	print(count)
-        	print(cx)
-        	if count>20 and (cx-320)**2<500:
+        	#print(count)
+        	print(depth)
+        	if count2>20 and (cx2-320)**2<500:
         		break
         	# rad略: -53 -62 0 -57 0 -60 -90
-		
         i=i-90
-        self.setup()
-        joint_values =[math.radians(i), math.radians(20), 0.0,math.radians(-100), 0.0, math.radians(-90), math.radians(-90)] 
-        self.setup2(1.5,100.0,0.1)
-        
-        
-        for p in range (0,90,3):
-        	
+		
+        for p in range(0,130,2):
         	self.setup()
-        	joint_values =[math.radians(i), math.radians(20-p*0.9), 0.0,math.radians(-100+p*0.9), 0.0, math.radians(-90+p*0.1), math.radians(-90)] 
-        	j2=20-p*0.9
-        	j4=-100+p*0.9
-        	j6=-90+p*0.1
-        	self.setup2(0.3,100.0,0.1)
+        	joint_values = [math.radians(i), math.radians(-20-p*0.5), 0.0, math.radians(-150+p), 0.0, math.radians(90-p*0.4), math.radians(90)]
+        	self.setup2(0.2,100,0.0)
         	
-        	if (cy-240)**2 < 400:
-        		break
-        
-        if(area>30000):
-        	barea=area
-        	self.setup()
-        	joint_values = [math.radians(i), math.radians(j2), 0.0, math.radians(j4), 0.0, math.radians(j6), math.radians(-80)]
-        	self.setup2(0.5,100.0,0.5)
-        	
-        	if(barea-area<0):
-        		print("ah")
-        		self.setup()
-        		joint_values = [math.radians(i), math.radians(j2), 0.0,math.radians(j4), 0.0, math.radians(j6), math.radians(-100)] 
-        		self.setup2(0.5,100.0,0.2)
-        		mem=-120
-        				
-        	else:
-        		print("ahh")
-        		mem=-60
-        			
-        else:
-        	mem=-90
      	
-        for w in range(0,24,2):
-        	
-        	self.setup()
-        	joint_values =[math.radians(i), math.radians(j2-w) , 0.0, math.radians(j4-w*1.7), 0.0, math.radians(1.7*w+j6), math.radians(mem)] 
-        	self.setup2(0.4,100.0,0.3)
+        
         
         self.setup()
         self.gripper_goal.command.position = math.radians(0.0)
-        self.setup2(2.5,100.0,1.0)	
-        
-        #shakemove
+        self.setup2(1.5,100.0,1.0)	
         
         self.setup()
-        joint_values = [math.radians(-30.0), math.radians(-10), 0.0, math.radians(-55), math.radians(90.0), math.radians(-60), math.radians(90)]
-        self.setup2(2.5, 100.0, 0.5)
-        
-        self.setup()
-        joint_values = [math.radians(-15.0), math.radians(-21), 0.0, math.radians(-120), math.radians(0.0), math.radians(60), math.radians(90)] 
+        joint_values = [math.radians(-15), math.radians(-21), 0.0, math.radians(-120), math.radians(0.0), math.radians(60), math.radians(90)] 
         self.setup2(1.5, 100.0, 0.5)
         
         
         
-        for count in range(30):
         
-        	print("shake")
-        	self.setup()
-        	joint_values = [math.radians(-15.0), math.radians(-21), 0.0, math.radians(-120), math.radians(0.0), math.radians(60), math.radians(82)]  
-        	self.setup2(0.1, 100.0, 0)
-        	#global area
-        	#print(area)
+        
+        print("pour")
+        self.setup()
+        joint_values = [math.radians(-18.0), math.radians(-21), math.radians(2), math.radians(-120), math.radians(0.0), math.radians(60), math.radians(90)]  
+        self.setup2(0.1, 100.0, 0)
+        
+        self.setup()
+        joint_values = [math.radians(-18.0), math.radians(-21), math.radians(2), math.radians(-120), math.radians(0.0), math.radians(60), math.radians(-75)]  
+        self.setup2(0.5, 100.0, 3.0)
         	
-        	print("shake")
-        	self.setup()
-        	joint_values = [math.radians(-15.0), math.radians(-21), 0.0, math.radians(-120), math.radians(0.0), math.radians(60), math.radians(98)]  
-        	self.setup2(0.1, 100.0, 0)
+        
       
         effort  = 1
 
@@ -216,7 +155,7 @@ def main():
 if __name__ == '__main__':
     #opt = parse_opt()
     rospy.init_node("action")
-    sub = rospy.Subscriber('num', val, callback)
+    sub = rospy.Subscriber('num2', val2, callback)
     main()
     rospy.spin()
     
