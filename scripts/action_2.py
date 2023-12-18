@@ -74,38 +74,41 @@ class ArmJointTrajectoryExample(object):
         print("serch stanby")
         self.setup()
         self.gripper_goal.command.position = math.radians(80.0)
-        joint_values =[math.radians(-90), math.radians(-20), 0.0,math.radians(-150), 0.0, math.radians(100), math.radians(90)] 
+        joint_values =[math.radians(-90), math.radians(-20), 0.0,math.radians(-150), 0.0, math.radians(100), math.radians(-90)] 
         self.setup2(2.5,100.0,2.5)
         
         count2=0
-        for i in range(0,45,2):
+        for i in range(0,180,1):
         	
         	self.setup()
         	#self.gripper_goal.command.position = math.radians(90.0)
-        	joint_values =[math.radians(i-90), math.radians(-20), 0.0,math.radians(-150), 0.0, math.radians(100), math.radians(90)]
-        	self.setup2(0.2,100.0,0.1)
+        	joint_values =[math.radians(i-90), math.radians(-20), 0.0,math.radians(-150), 0.0, math.radians(100), math.radians(-90)]
+        	self.setup2(0.3,100.0,0.2)
         	
         	#print(count)
         	print(depth)
-        	if count2>20 and (cx2-320)**2<500:
+        	if count2>10 and (cx2-320)**2<500:
         		break
         	# rad略: -53 -62 0 -57 0 -60 -90
         i=i-90
+        o=35
 		
-        for p in range(0,130,2):
+        for p in range(0,110,2):
         	self.setup()
-        	joint_values = [math.radians(i), math.radians(-20-p*0.5), 0.0, math.radians(-150+p), 0.0, math.radians(90-p*0.4), math.radians(90)]
+        	joint_values = [math.radians(i), math.radians(-20-p*0.5), 0.0, math.radians(-150+p), 0.0, math.radians(90-p*0.4), math.radians(-90)]
         	self.setup2(0.2,100,0.0)
+        	if depth <= 0.2:
+        		o = o-1
+        		if o==0:	
+        			break
         	
-     	
-        
         
         self.setup()
         self.gripper_goal.command.position = math.radians(0.0)
         self.setup2(1.5,100.0,1.0)	
         
         self.setup()
-        joint_values = [math.radians(-15), math.radians(-21), 0.0, math.radians(-120), math.radians(0.0), math.radians(60), math.radians(90)] 
+        joint_values = [math.radians(-15), math.radians(-21), 0.0, math.radians(-120), math.radians(0.0), math.radians(60), math.radians(-90)] 
         self.setup2(1.5, 100.0, 0.5)
         
         
@@ -114,11 +117,11 @@ class ArmJointTrajectoryExample(object):
         
         print("pour")
         self.setup()
-        joint_values = [math.radians(-18.0), math.radians(-21), math.radians(2), math.radians(-120), math.radians(0.0), math.radians(60), math.radians(90)]  
+        joint_values = [math.radians(-18.0), math.radians(-21), math.radians(2), math.radians(-120), math.radians(0.0), math.radians(60), math.radians(-90)]  
         self.setup2(0.1, 100.0, 0)
         
         self.setup()
-        joint_values = [math.radians(-18.0), math.radians(-21), math.radians(2), math.radians(-120), math.radians(0.0), math.radians(60), math.radians(-75)]  
+        joint_values = [math.radians(-18.0), math.radians(-21), math.radians(2), math.radians(-120), math.radians(0.0), math.radians(60), math.radians(45)]  
         self.setup2(0.5, 100.0, 3.0)
         	
         

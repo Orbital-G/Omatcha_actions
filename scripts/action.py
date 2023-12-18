@@ -93,10 +93,9 @@ class ArmJointTrajectoryExample(object):
         joint_values =[math.radians(-90), math.radians(-20), 0.0,math.radians(-150), 0.0, math.radians(100), math.radians(-90)] 
         self.setup2(2.5,100.0,2.5)
         
-       
-        
-        gradu1=[-90,-80,-70,-60,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90]
         count=0
+        cx=0
+        
         for i in range(0,181,2):
         	
         	self.setup()
@@ -119,7 +118,7 @@ class ArmJointTrajectoryExample(object):
         for p in range (0,90,3):
         	
         	self.setup()
-        	joint_values =[math.radians(i), math.radians(20-p*0.9), 0.0,math.radians(-100+p*0.9), 0.0, math.radians(-90+p*0.1), math.radians(-90)] 
+        	joint_values =[math.radians(i), math.radians(20-p), 0.0,math.radians(-100+p*0.9), 0.0, math.radians(-90+p*0.35), math.radians(-90)] 
         	j2=20-p*0.9
         	j4=-100+p*0.9
         	j6=-90+p*0.1
@@ -148,11 +147,18 @@ class ArmJointTrajectoryExample(object):
         else:
         	mem=-90
      	
-        for w in range(0,24,2):
+        for w in range(0,26,2):
         	
         	self.setup()
-        	joint_values =[math.radians(i), math.radians(j2-w) , 0.0, math.radians(j4-w*1.7), 0.0, math.radians(1.7*w+j6), math.radians(mem)] 
+        	joint_values =[math.radians(i), math.radians(j2-w*1.25) , 0.0, math.radians(j4-w*1.7), 0.0, math.radians(2.2*w+j6), math.radians(mem)] 
         	self.setup2(0.4,100.0,0.3)
+        	n1=i
+        	n2=j2-w*1.2
+        	n3=0
+        	n4=j4-w*1.8
+        	n5=0
+        	n6=1.8*w+j6
+        	n7=mem
         
         self.setup()
         self.gripper_goal.command.position = math.radians(0.0)
@@ -172,17 +178,24 @@ class ArmJointTrajectoryExample(object):
         
         for count in range(30):
         
-        	print("shake")
         	self.setup()
         	joint_values = [math.radians(-15.0), math.radians(-21), 0.0, math.radians(-120), math.radians(0.0), math.radians(60), math.radians(82)]  
         	self.setup2(0.1, 100.0, 0)
         	#global area
         	#print(area)
-        	
-        	print("shake")
+      
         	self.setup()
         	joint_values = [math.radians(-15.0), math.radians(-21), 0.0, math.radians(-120), math.radians(0.0), math.radians(60), math.radians(98)]  
         	self.setup2(0.1, 100.0, 0)
+        
+        self.setup()        
+        joint_values = [math.radians(n1), math.radians(0), math.radians(n3), math.radians(n4), math.radians(n5), math.radians(n6), math.radians(n7)]
+        self.setup2(3.0, 100.0, 1)	
+        self.setup()        
+        joint_values = [math.radians(n1), math.radians(n2), math.radians(n3), math.radians(n4), math.radians(n5), math.radians(n6), math.radians(n7)]
+        self.setup2(3.0, 100.0, 1)
+        
+        self.gripper_goal.command.position = math.radians(90)
       
         effort  = 1
 
