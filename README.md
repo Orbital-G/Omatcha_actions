@@ -97,3 +97,7 @@ https://github.com/Orbital-G/Omatcha_detection/assets/147364200/397026eb-578c-41
 ## ライセンス
 このパッケージOmatcha_actionsはアールティ様の定めたライセンスに則って開発しております。  
 詳しくは**LICENSE**をご確認ください。
+
+©︎ Kadono Kodai
+©︎ Nishi Touki
+©︎ Hachiya Etsushi
